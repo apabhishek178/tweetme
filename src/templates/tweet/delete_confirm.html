@@ -1,0 +1,9 @@
+{% extends "base.html" %}<br/>
+{% block title %}Delete Tweet|{{ block.super }}{% endblock title %}
+{% block content %}
+    <form action="" method="post" >
+        {% csrf_token %}
+        <p> you sure you want ot delete this tweet "{{ object }}"?</p>
+        <input type="submit" value="Confirm"/>
+    </form>
+{% endblock content %}
