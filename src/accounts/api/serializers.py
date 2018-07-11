@@ -1,12 +1,12 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-user = get_user_model()
+User = get_user_model()
 
 class UserDisplaySerializer(serializers.ModelSerializer):
     follower_count = serializers.SerializerMethodField()
     class Meta:
-        model = user
+        model = User
         fields = [
             'username',
             'first_name',
