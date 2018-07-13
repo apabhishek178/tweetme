@@ -14,11 +14,10 @@ function getParameterByName(name, url) {
 }
 
 $(document).ready(function() {
-    console.log("working");
     var query = getParameterByName('q');
     var tweetList = [];
     function parseTweets(){
-        if (tweetList == 0){
+        if (tweetList === 0){
             $("#tweet-container").text("No Tweets currently found")
         }
         else {
@@ -33,8 +32,8 @@ $(document).ready(function() {
             })
         }
     }
-
-    $.ajax({
+    function fetchTweets(){
+        $.ajax({
         url: "/api/tweet/",
         data: {
             "q":query
@@ -47,10 +46,41 @@ $(document).ready(function() {
         },
         error: function (data) {
             console.log("error");
-            console.log(data)
+            console.log(data);
         }
+        });
+    }
+
+    fetchTweets();
+
+    $("#tweet-form").submit(function (event){
+        console.log("fetching...");
+        event.preventDefault();
+        var this_=$(this);
+        var formData=this_.serialize();
+        $.ajax({
+        url: "/api/tweet/create",
+        data: {
+            "q":query
+        },
+        method: "GET",
+        success: function (data) {
+            //tweetList = data;
+            //parseTweets();
+            console.log(data);
+            fetchTweets();
+        },
+        error: function (data) {
+            console.log("error");
+            console.log(data.statusText);
+            console.log(data.status);
+        }
+        });
+
     })
 });
+
+
 
 </script>
 {% endblock script %}
@@ -64,7 +94,7 @@ $(document).ready(function() {
         <div class="col-sm-9">
             {% if not request.GET.q %}
             <div>
-                  {% include "tweet/form.html" with form=create_form action_url=create_url btn_title="Tweet" %}
+                  {% include "tweet/form.html" with form=create_form action_url=create_url btn_title="Tweet" form_id='tweet-form'%}
             </div>
             <hr/>
             {% endif %}
